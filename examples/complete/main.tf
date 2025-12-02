@@ -2,63 +2,49 @@ provider "aws" {
   region = local.region
 }
 
-data "aws_availability_zones" "available" {
-  # Exclude local zones
-  filter {
-    name   = "opt-in-status"
-    values = ["opt-in-not-required"]
-  }
-}
-
 locals {
-  region = "eu-west-1"
-  name   = "ex-${basename(path.cwd)}"
+  region = "eu-central-1"
+  name   = "vllm-mistral-7b"
 
-  vpc_cidr = "10.0.0.0/16"
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Name       = local.name
     Example    = local.name
-    Repository = "https://github.com/clowdhaus/terraform-aws-<TODO>"
+    Repository = "https://github.com/drizzle-ai-systems/terraform-aws-vllm-eks-helm"
   }
 }
 
 ################################################################################
-# <TODO_EXPANDED> Module
+# vLLM Mistral 7B Module
 ################################################################################
 
-module "<TODO_UNDER>" {
+module "vllm_mistral_7b" {
   source = "../.."
 
-  create = false
+  eks = {
+    cluster_name = "eks-vllm-cluster" # cluster name needs to be existing
+  }
 
-  tags = local.tags
-}
+  vllm = {
+    enabled      = true
+    force_update = true
+  }
 
-module "<TODO_UNDER>_disabled" {
-  source = "../.."
+  k8s = {
+    create_namespace          = true
+    kubernetes_namespace      = "vllm-mistral-7b"
+    service_account_namespace = "vllm-mistral-7b"
+    service_account_name      = "vllm-mistral-7b-sa"
+    iam_role_enabled          = true
+  }
 
-  create = false
-}
-
-################################################################################
-# Supporting Resources
-################################################################################
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 6.0"
-
-  name = local.name
-  cidr = local.vpc_cidr
-
-  azs             = local.azs
-  private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
-  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
+  helm = {
+    atomic               = true
+    cleanup_on_fail      = true
+    timeout              = 300
+    wait                 = true
+    values_template_path = "${path.module}/helm/values-mistral-7b.yaml"
+  }
 
   tags = local.tags
 }

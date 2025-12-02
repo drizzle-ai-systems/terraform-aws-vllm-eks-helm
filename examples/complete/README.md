@@ -1,8 +1,8 @@
-# Complete AWS <TODO_EXPANDED> Example
+# Complete Module Example
 
 Configuration in this directory creates:
 
-- <XXX>
+- LLM Model (e.g. Mistral 7B) deployed to EKS with helm and vLLM.
 
 ## Usage
 
@@ -26,23 +26,17 @@ Note that this example may create resources which will incur monetary charges on
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.19 |
+No providers.
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_<TODO_UNDER>"></a> [<TODO\_UNDER>](#module\_<TODO\_UNDER>) | ../.. | n/a |
-| <a name="module_<TODO_UNDER>_disabled"></a> [<TODO\_UNDER>\_disabled](#module\_<TODO\_UNDER>\_disabled) | ../.. | n/a |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 6.0 |
+| <a name="module_vllm_mistral_7b"></a> [vllm\_mistral\_7b](#module\_vllm\_mistral\_7b) | ../.. | n/a |
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
+No resources.
 
 ## Inputs
 
@@ -51,6 +45,7 @@ No inputs.
 ## Outputs
 
 No outputs.
+
 <!-- END_TF_DOCS -->
 
 Apache-2.0 Licensed. See [LICENSE](https://github.com/clowdhaus/terraform-aws-<TODO>/blob/main/LICENSE).
