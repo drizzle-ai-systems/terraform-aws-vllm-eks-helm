@@ -1,0 +1,28 @@
+image:
+  repository: "vllm/vllm-openai"
+  tag: "latest"
+  command: ["vllm", "serve", "/data/", "--served-model-name", "mistral-7b", "--enforce-eager", "--dtype", "bfloat16", "--block-size", "16", "--host", "0.0.0.0", "--port", "8000"]
+
+resources:
+  requests:
+    cpu: 8
+    memory: 32Gi
+    nvidia.com/gpu: 1
+  limits:
+    cpu: 8
+    memory: 32Gi
+    nvidia.com/gpu: 1
+
+extraInit:
+  modelDownload:
+    enabled: true
+    s3modelpath: "relative_s3_model_path/mistral-7b"
+    pvcStorage: "20Gi"
+    downloadJob:
+      args:
+        - "-eucx"
+        - "aws --endpoint-url $S3_ENDPOINT_URL s3 sync s3://$S3_BUCKET_NAME/$S3_PATH /data"
+
+labels:
+  environment: "production"
+  release: "mistral-7b"

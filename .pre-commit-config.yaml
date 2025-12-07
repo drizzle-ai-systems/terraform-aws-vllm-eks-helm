@@ -1,30 +1,31 @@
 repos:
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.103.0
-    hooks:
-      - id: terraform_fmt
-      - id: terraform_docs
-        args:
-          - '--args=--lockfile=false'
-      - id: terraform_tflint
-        args:
-          - '--args=--only=terraform_deprecated_interpolation'
-          - '--args=--only=terraform_deprecated_index'
-          - '--args=--only=terraform_unused_declarations'
-          - '--args=--only=terraform_comment_syntax'
-          - '--args=--only=terraform_documented_outputs'
-          - '--args=--only=terraform_documented_variables'
-          - '--args=--only=terraform_typed_variables'
-          - '--args=--only=terraform_module_pinned_source'
-          - '--args=--only=terraform_naming_convention'
-          - '--args=--only=terraform_required_version'
-          - '--args=--only=terraform_required_providers'
-          - '--args=--only=terraform_standard_module_structure'
-          - '--args=--only=terraform_workspace_remote'
-      - id: terraform_validate
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: check-merge-conflict
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.99.5
+  hooks:
+  - id: terraform_fmt
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # frozen: v5.0.0
+  hooks:
+  # Git style
+  - id: check-added-large-files
+  - id: check-merge-conflict
+  - id: check-vcs-permalinks
+  - id: forbid-new-submodules
+
+  # Common errors
+  - id: end-of-file-fixer
+  - id: check-merge-conflict
+  - id: check-executables-have-shebangs
+
+  # Security
+  - id: detect-aws-credentials
+    args:
+    - --allow-missing-credentials
+  - id: detect-private-key
+
+  # Detect hardcoded secrets
+- repo: https://github.com/gitleaks/gitleaks
+  rev: a248f9279b38aeff5bbd4c85cc6f15b64d27e794  # frozen: v8.27.0
+  hooks:
+  - id: gitleaks
